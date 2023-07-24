@@ -21,8 +21,16 @@ const customFetchBase: BaseQueryFn<
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
+  const accessToken = getAccessTokenFromCookie();
+
   // wait until the mutex is available without locking it
   await mutex.waitForUnlock();
+  // if (typeof args !== 'string') {
+  //   args.headers = {
+  //     ...args.headers,
+  //     Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGJlYzFhY2NjYjdkNzJmMmNkZjZlMWEiLCJpYXQiOjE2OTAyMjQxMjksImV4cCI6MTY5MDIyNTkyOX0.Bd4xwWX_SY4N-CxtIGn65ptwgrERmGWEmmRTRWYubxtp8wBU03LVNwg49LsKr8j7XsyIoxaZfVZJzdLuh_r2lJDt2V7kYYrREeI65ekRL9qoGHixAmvqKZ2Vw-IkNZ9ypiLkL9QkZenPuYhY55Azunc_yipiCkIF2tb1rMpp-ySUOS2cEAi_ChFEirlpRQa-212SNoMfB2bCpvgAV6IRJS-kwgPG7bzENOs5jnYTp4Re4WLPg-tZBnYUXAY_oDcxjr2_MqzFEaervWv0bMg5hJ3x3SkBI71SYvNqJlw-XucHjEiXR99yVCD_qKglWVcs6SIu1_ylvVoS4ovX_SpSaA`,
+  //   };
+  // }
   let result = await baseQuery(args, api, extraOptions);
   if ((result.error?.data as any)?.message === 'You are not logged in') {
     if (!mutex.isLocked()) {
@@ -34,6 +42,7 @@ const customFetchBase: BaseQueryFn<
           api,
           extraOptions
         );
+
 
         if (refreshResult.data) {
           // Retry the initial query
@@ -47,13 +56,29 @@ const customFetchBase: BaseQueryFn<
         release();
       }
     } else {
+
+  // Add the access token to the request headers
+       
+
       // wait until the mutex is available without locking it
       await mutex.waitForUnlock();
+      
       result = await baseQuery(args, api, extraOptions);
     }
   }
 
   return result;
 };
+
+function getAccessTokenFromCookie() {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    if (name === 'accessToken') {
+      return value;
+    }
+  }
+  return null;
+}
 
 export default customFetchBase;

@@ -72,6 +72,8 @@ export const getPostsHandler = async (
   next: NextFunction
 ) => {
   try {
+    console.log('ramin');
+    
     const posts = await findAllPosts();
 
     res.status(200).json({

@@ -12,6 +12,7 @@ export const deserializeUser = async (
   try {
     // Get the token
     let access_token;
+    
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer")
@@ -30,6 +31,8 @@ export const deserializeUser = async (
       access_token,
       "accessTokenPublicKey"
     );
+
+    console.log('ded',decoded);
 
     if (!decoded) {
       return next(new AppError(`Invalid token or user doesn't exist`, 401));

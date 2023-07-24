@@ -71,7 +71,9 @@ export const registerHandler = async (
     )}/verifyemail/${verificationCode}`;
 
     try {
-      await new Email(user, redirectUrl).sendVerificationCode();
+      console.log('sdsds',verificationCode);
+      
+      // await new Email(user, redirectUrl).sendVerificationCode();
 
       res.status(201).json({
         status: "success",

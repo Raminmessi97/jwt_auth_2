@@ -1,6 +1,5 @@
 export default {
   dbUrl: "DATABASE_URL",
-
   accessTokenPrivateKey: "ACCESS_TOKEN_PRIVATE_KEY",
   accessTokenPublicKey: "ACCESS_TOKEN_PUBLIC_KEY",
   refreshTokenPrivateKey: "REFRESH_TOKEN_PRIVATE_KEY",

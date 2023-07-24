@@ -25,6 +25,7 @@ const Header = () => {
   const [openPostModal, setOpenPostModal] = useState(false);
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.userState.user);
+  console.log('user',user);
 
   const [logoutUser, { isLoading, isSuccess, error, isError }] =
     useLogoutUserMutation();
